@@ -79,11 +79,11 @@ def dealReplyAB(data):
     # dict['Pm25'] = random() * 1000
     # dict['Tvoc'] = random() * 100
     dict['Pm25'] = (data[cmdpos+4]<<8) + data[cmdpos+5]
-    dict['Tvoc'] = (data[cmdpos+6]<<8) + data[cmdpos+7]
-    dict['Hcho'] = (data[cmdpos+9]<<8) + data[cmdpos+10]
+    dict['Tvoc'] = ((data[cmdpos+6]<<8) + data[cmdpos+7])/100
+    dict['Hcho'] = ((data[cmdpos+9]<<8) + data[cmdpos+10])/100
     dict['Co2'] = (data[cmdpos+12]<<8) + data[cmdpos+13]
-    dict['Temp'] = (data[cmdpos+14]<<8) + data[cmdpos+15]
-    dict['Hum'] = (data[cmdpos+16]<<8) + data[cmdpos+17]
+    dict['Temp'] = ((data[cmdpos+14]<<8) + data[cmdpos+15])/10
+    dict['Hum'] = ((data[cmdpos+16]<<8) + data[cmdpos+17])/10
     print(dict)
     return dict
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     stream0 = createCsv()
     serial0 = openSerial()
 
-    POINTS = 60
+    POINTS = 90
     list1 = [0] * POINTS
     list2 = [0] * POINTS
     indx = 0
@@ -120,8 +120,8 @@ if __name__ == '__main__':
         stream0.writerow(data0)
         # 更新绘图数据
         list1 = list1[1:] + [data0['Tvoc']]
-        list2 = list2[1:] + [data0['Pm25']]
+        list2 = list2[1:] + [data0['Hcho']]
         updateGraph(list1, list2)
-        sleep(2)
+        sleep(20)
         indx += 1
 
